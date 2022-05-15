@@ -27,6 +27,7 @@ jobs:
       - name: Run
         if: success() && !cancelled()
         run: |
+          sudo timedatectl set-timezone Asia/Shanghai
           curl -s "$URL" -o "$PANIC"
           grep "apnic|CN|ipv4|" "$PANIC" | awk -F '|' '{print $4"/"32-log($5)/log(2)}' >"$CNIP"
 
@@ -36,7 +37,7 @@ jobs:
         run: |
           echo "::set-output name=release_tag::CNIP"
           touch release.txt
-          echo "$(date +'%Y%m%d%H%M%S')" > release.txt
+          echo "$(date +'%Y%m%d%H%M')" > release.txt
           echo "FILES=$CNIP" >> $GITHUB_ENV
 
       - name: Release
